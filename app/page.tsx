@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import dailyData from "../data/v1/tasks_daily.json";
+import weeklyData from "../data/v1/tasks_weekly.json";
+
 
 const TASKS_STORAGE_KEY = "ddtd_tasks_v1";
 
@@ -50,8 +53,9 @@ function loadTasksState(): TasksState | null {
 
 export default function HomePage() {
   // ⚠️ 지금은 샘플 숙제 개수( /tasks에 있는 것과 맞춰둠 )
-  const dailyTotal = 3;
-  const weeklyTotal = 2;
+  const dailyTotal = (dailyData as any[]).length;
+  const weeklyTotal = (weeklyData as any[]).length;
+  
 
   const RESET_HOUR = 6;
   const dailyKey = useMemo(() => getKSTGameDateKey(RESET_HOUR), []);

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import dailyData from "../../data/v1/tasks_daily.json";
+import weeklyData from "../../data/v1/tasks_weekly.json";
 
 type Task = {
   id: string;
@@ -64,21 +66,15 @@ function saveState(s: TasksState) {
 export default function TasksPage() {
   // ✅ 샘플 숙제(나중에 실제 Heartopia 숙제로 교체)
   const dailyTasks: Task[] = useMemo(
-    () => [
-      { id: "d_001", title: "일일: 상점 방문/확인", group: "daily", priority: 10 },
-      { id: "d_002", title: "일일: 채집/낚시 루틴", group: "daily", priority: 20 },
-      { id: "d_003", title: "일일: 요리/가공 1회", group: "daily", priority: 30 },
-    ],
+    () => (dailyData as any[]).map((t) => ({ ...t, group: "daily" as const })),
     []
   );
-
+  
   const weeklyTasks: Task[] = useMemo(
-    () => [
-      { id: "w_001", title: "주간: 목표 보상 수령", group: "weekly", priority: 10 },
-      { id: "w_002", title: "주간: 특정 콘텐츠 N회", group: "weekly", priority: 20 },
-    ],
+    () => (weeklyData as any[]).map((t) => ({ ...t, group: "weekly" as const })),
     []
   );
+  
 
   const [tab, setTab] = useState<"daily" | "weekly">("daily");
   const [state, setState] = useState<TasksState>({ version: 1, daily: {}, weekly: {} });
