@@ -17,26 +17,33 @@ type TasksState = {
 
 const STORAGE_KEY = "ddtd_tasks_v1";
 
-function getKSTDateKey(d = new Date()) {
-  // 한국시간 기준 날짜키 (YYYY-MM-DD)
-  const kst = new Date(d.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
-  const y = kst.getFullYear();
-  const m = String(kst.getMonth() + 1).padStart(2, "0");
-  const day = String(kst.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-function getISOWeekKey(d = new Date()) {
-  // ISO 주차 키: YYYY-Www (한국시간 기준으로 계산)
-  const kst = new Date(d.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
-  const date = new Date(Date.UTC(kst.getFullYear(), kst.getMonth(), kst.getDate()));
-  const dayNum = date.getUTCDay() || 7;
-  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil((((date.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
-  const yyyy = date.getUTCFullYear();
-  return `${yyyy}-W${String(weekNo).padStart(2, "0")}`;
-}
+function getKSTGameDateKey(resetHour = 6, d = new Date()) {
+    // KST 기준 '게임 날짜키' (리셋 시각 전에는 전날로 취급)
+    const kst = new Date(d.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+    kst.setHours(kst.getHours() - resetHour);
+  
+    const y = kst.getFullYear();
+    const m = String(kst.getMonth() + 1).padStart(2, "0");
+    const day = String(kst.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+  
+  function getISOWeekGameKey(resetHour = 6, d = new Date()) {
+    // KST 기준 '게임 주차키' (리셋 시각 전에는 전날로 취급)
+    const kst = new Date(d.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+    kst.setHours(kst.getHours() - resetHour);
+  
+    const date = new Date(Date.UTC(kst.getFullYear(), kst.getMonth(), kst.getDate()));
+    const dayNum = date.getUTCDay() || 7;
+    date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil((((date.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+  
+    const yyyy = date.getUTCFullYear();
+    return `${yyyy}-W${String(weekNo).padStart(2, "0")}`;
+  }
+  
 
 function loadState(): TasksState {
   try {
@@ -76,8 +83,10 @@ export default function TasksPage() {
   const [tab, setTab] = useState<"daily" | "weekly">("daily");
   const [state, setState] = useState<TasksState>({ version: 1, daily: {}, weekly: {} });
 
-  const dailyKey = getKSTDateKey();
-  const weeklyKey = getISOWeekKey();
+  const RESET_HOUR = 6; // 아시아 서버 새벽 6시 리셋
+  const dailyKey = getKSTGameDateKey(RESET_HOUR);
+  const weeklyKey = getISOWeekGameKey(RESET_HOUR);
+  
 
   // load once
   useEffect(() => {
