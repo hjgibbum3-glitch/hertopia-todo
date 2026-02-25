@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-
 
 type TimerPreset = {
   id: string;
@@ -37,8 +36,10 @@ function uuid() {
   return crypto.randomUUID?.() ?? `id_${Date.now()}_${Math.random()}`;
 }
 
-export default function TimerPage() {
-    const searchParams = useSearchParams();
+// ✅ useSearchParams를 쓰는 컴포넌트는 Suspense 안에서 렌더링되어야 함
+function TimerInner() {
+  const searchParams = useSearchParams();
+
   const presets: TimerPreset[] = useMemo(
     () => [
       { id: "rare_timber", title: "희귀목재(거대 나무) - 2시간", durationSec: 2 * 60 * 60 },
@@ -49,31 +50,8 @@ export default function TimerPage() {
 
   const [running, setRunning] = useState<RunningTimer[]>([]);
   const [tick, setTick] = useState(0);
-  useEffect(() => {
-    const startId = searchParams.get("start");
-    if (!startId) return;
 
-    const p = presets.find((x) => x.id === startId);
-    if (!p) return;
-
-    // 같은 preset이 이미 실행 중이면 중복 시작 방지
-    const exists = running.some(
-      (r) => r.presetId === p.id && nowSec() - r.startedAt < r.durationSec
-    );
-    if (exists) return;
-
-    // startPreset(p) 대신, 현재 파일 함수명이 다르면 아래처럼 직접 추가해도 됨
-    // (너 코드에 startPreset 함수가 있다면 startPreset(p)로 바꾸면 더 깔끔)
-    const item: RunningTimer = {
-      runId: uuid(),
-      presetId: p.id,
-      title: p.title,
-      durationSec: p.durationSec,
-      startedAt: nowSec(),
-    };
-    setRunning((prev) => [item, ...prev]);
-  }, [searchParams, presets, running]);
-
+  // load
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -81,12 +59,14 @@ export default function TimerPage() {
     } catch {}
   }, []);
 
+  // save
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(running));
     } catch {}
   }, [running]);
 
+  // ticker
   useEffect(() => {
     const t = setInterval(() => setTick((x) => x + 1), 1000);
     return () => clearInterval(t);
@@ -115,6 +95,25 @@ export default function TimerPage() {
     await Notification.requestPermission();
   };
 
+  // ✅ URL 파라미터로 자동 시작: /timer?start=black_truffle
+  useEffect(() => {
+    const startId = searchParams.get("start");
+    if (!startId) return;
+
+    const p = presets.find((x) => x.id === startId);
+    if (!p) return;
+
+    const exists = running.some(
+      (r) => r.presetId === p.id && nowSec() - r.startedAt < r.durationSec
+    );
+    if (exists) return;
+
+    startPreset(p);
+    // 일부 환경에서 중복 실행 방지용으로 deps를 줄이는 경우도 있지만,
+    // 지금은 exists 체크가 있어서 안전하게 둠.
+  }, [searchParams, presets, running]);
+
+  // 완료 알림
   useEffect(() => {
     if (!("Notification" in window)) return;
     if (Notification.permission !== "granted") return;
@@ -204,7 +203,10 @@ export default function TimerPage() {
                       </div>
                     </div>
 
-                    <button className="rounded-lg border px-3 py-1 text-sm hover:bg-gray-50" onClick={() => removeRun(t.runId)}>
+                    <button
+                      className="rounded-lg border px-3 py-1 text-sm hover:bg-gray-50"
+                      onClick={() => removeRun(t.runId)}
+                    >
                       삭제
                     </button>
                   </div>
@@ -219,5 +221,14 @@ export default function TimerPage() {
         * 기기 동기화(로그인)는 다음 단계에서 추가 예정.
       </p>
     </main>
+  );
+}
+
+// ✅ Page 컴포넌트는 Suspense로 감싸서 export 빌드가 통과하도록
+export default function TimerPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen p-6">로딩 중...</div>}>
+      <TimerInner />
+    </Suspense>
   );
 }
