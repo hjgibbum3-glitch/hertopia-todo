@@ -1,5 +1,21 @@
 [
-    { "id": "w_001", "title": "주간: 목표 보상 수령", "priority": 10 },
-    { "id": "w_002", "title": "주간: 특정 콘텐츠 N회", "priority": 20 }
+    {
+      "id": "w_001",
+      "title": "주간: 목표 보상 수령",
+      "priority": 10,
+      "tags": ["보상"],
+      "links": [
+        { "type": "guide", "label": "주간 팁", "href": "/guide/weekly-routine" }
+      ]
+    },
+    {
+      "id": "w_002",
+      "title": "주간: 특정 콘텐츠 N회",
+      "priority": 20,
+      "tags": ["콘텐츠"],
+      "links": [
+        { "type": "timer", "label": "트러플 타이머", "href": "/timer?start=black_truffle" }
+      ]
+    }
   ]
   

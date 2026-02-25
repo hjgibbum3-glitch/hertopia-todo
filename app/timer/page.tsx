@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+
 
 type TimerPreset = {
   id: string;
@@ -36,6 +38,7 @@ function uuid() {
 }
 
 export default function TimerPage() {
+    const searchParams = useSearchParams();
   const presets: TimerPreset[] = useMemo(
     () => [
       { id: "rare_timber", title: "희귀목재(거대 나무) - 2시간", durationSec: 2 * 60 * 60 },
@@ -46,6 +49,30 @@ export default function TimerPage() {
 
   const [running, setRunning] = useState<RunningTimer[]>([]);
   const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const startId = searchParams.get("start");
+    if (!startId) return;
+
+    const p = presets.find((x) => x.id === startId);
+    if (!p) return;
+
+    // 같은 preset이 이미 실행 중이면 중복 시작 방지
+    const exists = running.some(
+      (r) => r.presetId === p.id && nowSec() - r.startedAt < r.durationSec
+    );
+    if (exists) return;
+
+    // startPreset(p) 대신, 현재 파일 함수명이 다르면 아래처럼 직접 추가해도 됨
+    // (너 코드에 startPreset 함수가 있다면 startPreset(p)로 바꾸면 더 깔끔)
+    const item: RunningTimer = {
+      runId: uuid(),
+      presetId: p.id,
+      title: p.title,
+      durationSec: p.durationSec,
+      startedAt: nowSec(),
+    };
+    setRunning((prev) => [item, ...prev]);
+  }, [searchParams, presets, running]);
 
   useEffect(() => {
     try {

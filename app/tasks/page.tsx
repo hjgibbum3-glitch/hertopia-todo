@@ -4,12 +4,21 @@ import { useEffect, useMemo, useState } from "react";
 import dailyData from "../../data/v1/tasks_daily.json";
 import weeklyData from "../../data/v1/tasks_weekly.json";
 
-type Task = {
-  id: string;
-  title: string;
-  group: "daily" | "weekly";
-  priority: number;
-};
+type TaskLink = {
+    type: "timer" | "map" | "dex" | "sell" | "guide";
+    label: string;
+    href: string;
+  };
+  
+  type Task = {
+    id: string;
+    title: string;
+    group: "daily" | "weekly";
+    priority: number;
+    tags?: string[];
+    links?: TaskLink[];
+  };
+  
 
 type TasksState = {
   version: 1;
@@ -187,6 +196,36 @@ export default function TasksPage() {
                 <div className="flex-1">
                   <div className={`font-medium ${checked ? "line-through text-gray-500" : ""}`}>{t.title}</div>
                   <div className="text-xs text-gray-500">우선순위 {t.priority}</div>
+                  {/* tags */}
+{t.tags?.length ? (
+  <div className="mt-2 flex flex-wrap gap-1">
+    {t.tags.map((tag) => (
+      <span
+        key={tag}
+        className="rounded-full border px-2 py-0.5 text-xs text-gray-600"
+      >
+        {tag}
+      </span>
+    ))}
+  </div>
+) : null}
+
+{/* links */}
+{t.links?.length ? (
+  <div className="mt-2 flex flex-wrap gap-2">
+    {t.links.map((lnk) => (
+      <a
+        key={`${t.id}-${lnk.href}-${lnk.label}`}
+        href={lnk.href}
+        className="rounded-lg border px-2 py-1 text-xs hover:bg-gray-50"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {lnk.label}
+      </a>
+    ))}
+  </div>
+) : null}
+
                 </div>
               </label>
             );
