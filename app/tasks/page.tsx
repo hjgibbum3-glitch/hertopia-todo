@@ -214,14 +214,18 @@ export default function TasksPage() {
 {t.links?.length ? (
   <div className="mt-2 flex flex-wrap gap-2">
     {t.links.map((lnk) => (
-      <a
-        key={`${t.id}-${lnk.href}-${lnk.label}`}
-        href={lnk.href}
-        className="rounded-lg border px-2 py-1 text-xs hover:bg-gray-50"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {lnk.label}
-      </a>
+ <a
+ key={`${t.id}-${lnk.href}-${lnk.label}`}
+ href={lnk.href}
+ className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-400 active:scale-[0.98]"
+ onClick={(e) => e.stopPropagation()}
+>
+ <span>
+   {lnk.label === "가이드" ? "📘 " : ""}
+   {lnk.label}
+ </span>
+</a>
+
     ))}
   </div>
 ) : null}
