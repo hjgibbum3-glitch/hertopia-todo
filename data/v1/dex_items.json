@@ -1,0 +1,62 @@
+[
+    {
+      "id": "fish_001",
+      "name": "초보자 물고기",
+      "category": "fish",
+      "rarity": "common",
+      "sellPrice": 120,
+      "howTo": ["강가에서 낚시로 획득"],
+      "time": ["상시"],
+      "weather": ["상관없음"],
+      "locations": ["강가"],
+      "keywords": ["기본", "낚시"]
+    },
+    {
+      "id": "bug_001",
+      "name": "초보자 곤충",
+      "category": "bug",
+      "rarity": "uncommon",
+      "sellPrice": 200,
+      "howTo": ["숲 지역에서 채집"],
+      "time": ["낮"],
+      "weather": ["맑음"],
+      "locations": ["숲"],
+      "keywords": ["곤충", "채집"]
+    },
+    {
+      "id": "bird_001",
+      "name": "초보자 새",
+      "category": "bird",
+      "rarity": "rare",
+      "sellPrice": 350,
+      "howTo": ["들판에서 관찰로 획득"],
+      "time": ["아침"],
+      "weather": ["맑음", "흐림"],
+      "locations": ["들판"],
+      "keywords": ["새관찰", "관찰"]
+    },
+    {
+      "id": "food_001",
+      "name": "기본 요리",
+      "category": "food",
+      "rarity": "common",
+      "sellPrice": 180,
+      "howTo": ["요리로 제작 후 도감 등록"],
+      "time": ["상시"],
+      "weather": ["상관없음"],
+      "locations": ["주방/요리"],
+      "keywords": ["요리", "제작"]
+    },
+    {
+      "id": "garden_001",
+      "name": "기본 원예",
+      "category": "garden",
+      "rarity": "uncommon",
+      "sellPrice": 160,
+      "howTo": ["원예로 재배 후 수확"],
+      "time": ["상시"],
+      "weather": ["상관없음"],
+      "locations": ["정원/텃밭"],
+      "keywords": ["원예", "재배"]
+    }
+  ]
