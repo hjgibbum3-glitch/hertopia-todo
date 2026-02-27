@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import dailyData from "../../data/v1/tasks_daily.json";
-import weeklyData from "../../data/v1/tasks_weekly.json";
+import dailyData from "@/data/v1/tasks_daily.json";
+import weeklyData from "@/data/v1/tasks_weekly.json";
+
 
 type TaskLink = {
-    type: "timer" | "map" | "dex" | "sell" | "guide";
-    label: string;
-    href: string;
-  };
+  type?: "timer" | "map" | "dex" | "sell" | "guide";
+  label: string;
+  href: string;
+};
+
   
   type Task = {
     id: string;
@@ -17,6 +19,7 @@ type TaskLink = {
     priority: number;
     tags?: string[];
     links?: TaskLink[];
+    note?: string;
   };
   
 
@@ -74,15 +77,18 @@ function saveState(s: TasksState) {
 
 export default function TasksPage() {
   // ✅ 샘플 숙제(나중에 실제 Heartopia 숙제로 교체)
+  type TaskInput = Omit<Task, "group">;
+
   const dailyTasks: Task[] = useMemo(
-    () => (dailyData as any[]).map((t) => ({ ...t, group: "daily" as const })),
+    () => (dailyData as TaskInput[]).map((t) => ({ ...t, group: "daily" as const })),
     []
   );
   
   const weeklyTasks: Task[] = useMemo(
-    () => (weeklyData as any[]).map((t) => ({ ...t, group: "weekly" as const })),
+    () => (weeklyData as TaskInput[]).map((t) => ({ ...t, group: "weekly" as const })),
     []
   );
+  
   
 
   const [tab, setTab] = useState<"daily" | "weekly">("daily");
@@ -196,6 +202,11 @@ export default function TasksPage() {
                 <div className="flex-1">
                   <div className={`font-medium ${checked ? "line-through text-gray-500" : ""}`}>{t.title}</div>
                   <div className="text-xs text-gray-500">우선순위 {t.priority}</div>
+                  {t.note ? (
+  <div className="mt-1 text-xs text-gray-500">
+    📝 {t.note}
+  </div>
+) : null}
                   {/* tags */}
 {t.tags?.length ? (
   <div className="mt-2 flex flex-wrap gap-1">

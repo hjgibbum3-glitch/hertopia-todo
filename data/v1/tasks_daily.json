@@ -1,30 +1,24 @@
 [
-    {
-      "id": "d_001",
-      "title": "일일: 상점 방문/확인",
-      "priority": 10,
-      "tags": ["루틴", "기본"],
-      "links": [
-        { "type": "guide", "label": "가이드", "href": "/guide/daily-routine" }
-      ]
-    },
-    {
-      "id": "d_002",
-      "title": "일일: 채집/낚시 루틴",
-      "priority": 20,
-      "tags": ["채집"],
-      "links": [
-        { "type": "map", "label": "지도", "href": "/map" }
-      ]
-    },
-    {
-      "id": "d_003",
-      "title": "일일: 요리/가공 1회",
-      "priority": 30,
-      "tags": ["요리"],
-      "links": [
-        { "type": "sell", "label": "판매 효율", "href": "/sell" }
-      ]
-    }
-  ]
-  
+  {
+    "id": "d_001",
+    "title": "일일: 상점 방문/확인",
+    "priority": 10,
+    "tags": ["루틴", "기본"],
+    "links": [{ "label": "가이드", "href": "/guide/daily-routine" }],
+    "note": "리셋(06:00) 직후 확인하면 누락이 적어요."
+  },
+  {
+    "id": "d_002",
+    "title": "일일: 채집/낚시 루틴",
+    "priority": 20,
+    "tags": ["채집", "루틴"],
+    "links": [{ "label": "지도", "href": "/map" }]
+  },
+  {
+    "id": "d_003",
+    "title": "일일: 요리/가공 1회",
+    "priority": 30,
+    "tags": ["요리"],
+    "links": [{ "label": "판매 효율", "href": "/profit" }]
+  }
+]
