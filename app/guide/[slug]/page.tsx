@@ -1,6 +1,9 @@
+import guides from "@/data/v1/guides.json";
+
 export function generateStaticParams() {
-  return [{ slug: "daily-routine" }, { slug: "weekly-routine" }];
+  return Object.keys(guides).map((slug) => ({ slug }));
 }
+
 
 export default async function GuidePage({
   params,
@@ -9,29 +12,16 @@ export default async function GuidePage({
 }) {
   const { slug } = await params;
 
-  const content: Record<string, { title: string; body: string[] }> = {
-    "daily-routine": {
-      title: "일일 루틴 가이드",
-      body: [
-        "매일 06:00(아시아 서버) 리셋 기준으로 루틴을 체크하세요.",
-        "상점 확인 → 채집/낚시 → 요리/가공 순으로 진행하면 편합니다.",
-        "필요하면 타이머/지도 기능과 같이 사용하세요.",
-      ],
-    },
-    "weekly-routine": {
-      title: "주간 루틴 가이드",
-      body: [
-        "주간 목표 보상은 잊기 쉬우니 우선순위를 높게 두세요.",
-        "콘텐츠 반복형 숙제는 타이머를 같이 쓰면 편합니다.",
-      ],
-    },
-  };
-
+  type Guide = { title: string; body: string[] };
+  type Guides = Record<string, Guide>;
+  
   const data =
-    content[slug] ?? {
+    (guides as Guides)[slug] ??
+    ({
       title: "가이드",
       body: ["이 가이드는 아직 준비 중입니다. 곧 업데이트할게요."],
-    };
+    } satisfies Guide);
+  
 
   return (
     <main className="min-h-screen p-6">

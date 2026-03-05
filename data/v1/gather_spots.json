@@ -1,0 +1,51 @@
+[
+    {
+      "id": "spot_001",
+      "name": "강가 낚시 포인트",
+      "region": "강가",
+      "types": ["fish"],
+      "items": ["fish_001"],
+      "conditions": {
+        "time": ["상시"],
+        "weather": ["상관없음"]
+      },
+      "tips": ["초보자용 낚시 포인트", "숙제 낚시 루틴에 추천"]
+    },
+    {
+      "id": "spot_002",
+      "name": "숲 곤충 채집 루트",
+      "region": "숲",
+      "types": ["bug"],
+      "items": ["bug_001"],
+      "conditions": {
+        "time": ["낮"],
+        "weather": ["맑음"]
+      },
+      "tips": ["낮에 이동하면서 채집하기 좋아요"]
+    },
+    {
+      "id": "spot_003",
+      "name": "들판 새관찰 포인트",
+      "region": "들판",
+      "types": ["bird"],
+      "items": ["bird_001"],
+      "conditions": {
+        "time": ["아침"],
+        "weather": ["맑음", "흐림"]
+      },
+      "tips": ["아침 시간대에 체크 추천"]
+    },
+    {
+      "id": "spot_004",
+      "name": "검은 트러플 스팟(예시)",
+      "region": "숲",
+      "types": ["forage"],
+      "items": [],
+      "conditions": {
+        "respawn": "15m",
+        "time": ["상시"],
+        "weather": ["상관없음"]
+      },
+      "tips": ["15분 리스폰", "타이머와 같이 사용"]
+    }
+  ]
